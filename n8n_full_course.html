@@ -1,0 +1,241 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.course-wrap { padding: 1.5rem 0; }
+.course-header { margin-bottom: 2rem; }
+.course-header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.course-header p { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; }
+.progress-bar-wrap { margin: 1rem 0 0; }
+.progress-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
+.progress-track { height: 6px; background: var(--color-background-secondary); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: #1D9E75; transition: width 0.4s ease; }
+.module-grid { display: flex; flex-direction: column; gap: 10px; }
+.module-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.module-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; }
+.module-header:hover { background: var(--color-background-secondary); }
+.module-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.module-meta { flex: 1; }
+.module-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.module-subtitle { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.module-badge { font-size: 12px; padding: 3px 10px; border-radius: 99px; flex-shrink: 0; }
+.module-chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform 0.2s; flex-shrink: 0; }
+.module-chevron.open { transform: rotate(90deg); }
+.module-body { display: none; border-top: 0.5px solid var(--color-border-tertiary); }
+.module-body.open { display: block; }
+.lesson-list { padding: 8px 0; }
+.lesson-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px 10px 60px; cursor: pointer; }
+.lesson-row:hover { background: var(--color-background-secondary); }
+.lesson-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--color-border-secondary); flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.2s; }
+.lesson-check.done { background: #1D9E75; border-color: #1D9E75; color: #fff; }
+.lesson-info { flex: 1; }
+.lesson-title { font-size: 14px; color: var(--color-text-primary); line-height: 1.5; }
+.lesson-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.5; }
+.lesson-tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-top: 5px; display: inline-block; }
+.tag-concept { background: #E6F1FB; color: #0C447C; }
+.tag-hands { background: #EAF3DE; color: #3B6D11; }
+.tag-project { background: #FAEEDA; color: #854F0B; }
+.tag-tip { background: #EEEDFE; color: #3C3489; }
+.content-panel { background: var(--color-background-secondary); border-top: 0.5px solid var(--color-border-tertiary); padding: 16px; display: none; }
+.content-panel.open { display: block; }
+.content-panel h3 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
+.content-panel p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 10px; }
+.content-panel ul { padding-left: 1.2rem; }
+.content-panel ul li { font-size: 14px; color: var(--color-text-secondary); line-height: 1.8; }
+.ask-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 7px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
+.ask-btn:hover { background: var(--color-background-secondary); }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; text-align: center; }
+.stat-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.stat-lbl { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+</style>
+
+<div class="course-wrap">
+<h2 class="sr-only">n8n full course — interactive learning tracker</h2>
+
+<div class="course-header">
+  <h1>n8n — from zero to automation</h1>
+  <p>A structured course to understand, build, and deploy real automations with n8n. Click any lesson to read it, then mark it done.</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-label" id="prog-label">0 of 28 lessons completed</div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num">6</div><div class="stat-lbl">Modules</div></div>
+  <div class="stat-card"><div class="stat-num">28</div><div class="stat-lbl">Lessons</div></div>
+  <div class="stat-card"><div class="stat-num" id="done-count">0</div><div class="stat-lbl">Completed</div></div>
+</div>
+
+<div class="module-grid" id="modules"></div>
+</div>
+
+<script>
+const TOTAL = 28;
+const done = new Set();
+
+const modules = [
+  {
+    num: '01', title: 'What is n8n?', subtitle: 'Core concepts & mental model', color: '#E6F1FB', textColor: '#0C447C', badge: 'Foundation', badgeBg: '#E6F1FB', badgeColor: '#0C447C',
+    lessons: [
+      { title: 'n8n in one sentence', tag: 'concept', desc: 'What n8n is, what problem it solves, and why it exists.', content: { h: 'n8n in one sentence', p: ['n8n (pronounced "n-eight-n") is an open-source workflow automation tool. It lets you connect apps, APIs, and services together using a visual canvas — no code required for most tasks, but full code access when you need it.', 'Think of it like Zapier or Make (formerly Integromat), but self-hostable, more powerful, and free for self-hosted use.'], points: ['Visual drag-and-drop canvas', 'Connect 400+ apps out of the box', 'Self-host on your own server or use n8n Cloud', 'Runs automations called Workflows'] } },
+      { title: 'Workflows, nodes & triggers — the three pillars', tag: 'concept', desc: 'The three building blocks everything else is made of.', content: { h: 'The three pillars', p: ['A Workflow is a chain of steps that run in sequence (or in parallel). Each step is called a Node. The first node is almost always a Trigger — the event that starts everything.', 'Example: "When a new row is added to Google Sheets (Trigger) → send a Slack message (Node) → log it to Airtable (Node)."'], points: ['Trigger: the starting event (webhook, schedule, form, etc.)', 'Node: a single action or transformation step', 'Workflow: the full connected chain of nodes'] } },
+      { title: 'n8n vs Zapier vs Make — pick the right tool', tag: 'concept', desc: 'Honest comparison so you know what you\'re choosing.', content: { h: 'n8n vs Zapier vs Make', p: ['Zapier: easiest, most integrations, but expensive at scale and no self-hosting. Make: visual and powerful, good pricing, but no self-hosting. n8n: steepest learning curve but free self-hosted, unlimited executions, and full code access.', 'If you\'re building for a business and want control + no per-task pricing, n8n wins. If you want zero setup, Zapier wins.'], points: ['n8n: self-host, open source, code-friendly', 'Zapier: easiest onboarding, most app coverage', 'Make: best visual logic, mid-tier pricing'] } },
+      { title: 'Cloud vs self-hosted — which setup to use', tag: 'concept', desc: 'Two ways to run n8n and when to pick each.', content: { h: 'Cloud vs self-hosted', p: ['n8n Cloud: sign up at n8n.io, no server needed, $20/month starter plan. Great for getting started fast.', 'Self-hosted: install on any server (VPS, Docker, Raspberry Pi). Free forever, full control, but you manage updates and backups.'], points: ['Cloud: fastest to start, managed infrastructure', 'Self-hosted with Docker: recommended for production use', 'Self-hosted on VPS (e.g. Hetzner, DigitalOcean): ~$5/month total cost'] } },
+    ]
+  },
+  {
+    num: '02', title: 'Setup & first workflow', subtitle: 'Install n8n and build your first automation', color: '#EAF3DE', textColor: '#3B6D11', badge: 'Hands-on', badgeBg: '#EAF3DE', badgeColor: '#3B6D11',
+    lessons: [
+      { title: 'Install n8n with Docker (recommended)', tag: 'hands', desc: 'The fastest reliable way to run n8n locally or on a server.', content: { h: 'Install with Docker', p: ['Docker is the easiest way. Make sure Docker Desktop is installed, then run this single command:', 'docker run -it --rm --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n docker.n8n.io/n8nio/n8n', 'Then open http://localhost:5678 in your browser. You\'ll see the n8n editor.'], points: ['Requires Docker Desktop installed first', 'Data is saved in ~/.n8n folder on your machine', 'For production, use docker-compose with a database'] } },
+      { title: 'The n8n editor — a guided tour', tag: 'concept', desc: 'Understanding every part of the UI before you build.', content: { h: 'The n8n editor', p: ['The canvas is where you build workflows. On the left is the node panel (search and add nodes). At the top is the toolbar (save, execute, settings). Each node has an input and output connector.', 'When you click a node, a panel opens on the right showing its settings. This is where you configure what the node does.'], points: ['Canvas: drag nodes, draw connections', 'Node panel: search 400+ integrations', 'Execution log: see every run and its data', 'Settings panel: configure each node'] } },
+      { title: 'Your first workflow — schedule + HTTP request', tag: 'hands', desc: 'Build a real workflow in 10 minutes from scratch.', content: { h: 'First workflow', p: ['Goal: every hour, fetch the latest Bitcoin price from a public API and log it.', 'Step 1 — Add a Schedule Trigger node. Set it to run every 1 hour. Step 2 — Add an HTTP Request node. Set the URL to https://api.coindesk.com/v1/bpi/currentprice.json. Step 3 — Connect them. Click Execute Workflow. Done.'], points: ['Schedule Trigger → runs on a timer', 'HTTP Request → fetches data from any URL', 'The output appears in the node panel as JSON'] } },
+      { title: 'Understanding data flow — what passes between nodes', tag: 'concept', desc: 'The most important mental model in n8n.', content: { h: 'Data flow in n8n', p: ['Every node receives an array of items and outputs an array of items. Each item is a JSON object. The next node processes each item, one by one (or all at once depending on the node).', 'This is the core mental model. Once you understand that data flows as JSON arrays between nodes, everything else clicks.'], points: ['Input: array of JSON objects', 'Output: array of JSON objects (modified or new)', 'You can inspect data at any step by clicking the node', 'Missing data = the connection is broken somewhere above'] } },
+    ]
+  },
+  {
+    num: '03', title: 'Core nodes & logic', subtitle: 'The building blocks you\'ll use in every workflow', color: '#EEEDFE', textColor: '#3C3489', badge: 'Core skills', badgeBg: '#EEEDFE', badgeColor: '#3C3489',
+    lessons: [
+      { title: 'HTTP Request node — call any API', tag: 'hands', desc: 'The most versatile node. GET, POST, PUT, DELETE — all of it.', content: { h: 'HTTP Request node', p: ['The HTTP Request node lets you call any REST API in the world. Set the method (GET/POST/etc.), the URL, add headers or a body, and it returns the response as JSON.', 'Use case: call OpenAI, send data to Airtable, trigger a webhook, fetch weather data — anything with an API.'], points: ['Method: GET, POST, PUT, PATCH, DELETE', 'Authentication: API key, Bearer token, Basic auth', 'Body: JSON, form, raw text', 'Response: automatically parsed as JSON'] } },
+      { title: 'IF node — conditional logic', tag: 'hands', desc: 'Branch your workflow based on any condition.', content: { h: 'IF node', p: ['The IF node splits your workflow into two paths: true and false. You set a condition (e.g. "if the price is greater than 50000") and the data flows down the matching path.', 'You can chain multiple IF nodes to create complex branching logic.'], points: ['Condition types: equals, contains, greater than, regex, etc.', 'Two outputs: true branch and false branch', 'Can compare strings, numbers, booleans, dates', 'Use Switch node for more than 2 branches'] } },
+      { title: 'Set node — create and modify data', tag: 'hands', desc: 'Shape your data before passing it to the next node.', content: { h: 'Set node', p: ['The Set node lets you create new fields, modify existing ones, or remove fields from your items. It\'s like a "data shaper".', 'Example: you receive {firstName, lastName} and want to create {fullName}. Add a Set node, create a field called fullName, and set the value to {{ $json.firstName + " " + $json.lastName }}.'], points: ['Add new fields to items', 'Modify existing field values', 'Remove fields you don\'t need', 'Use expressions ({{ }}) to compute values'] } },
+      { title: 'Expressions — dynamic values with {{ }}', tag: 'concept', desc: 'How to reference data from previous nodes dynamically.', content: { h: 'Expressions', p: ['Anywhere you see a text field in n8n, you can use an expression by wrapping it in double curly braces: {{ }}. Inside, you can reference data from any previous node.', '{{ $json.email }} — gets the email field from the current item. {{ $node["Node Name"].json.field }} — gets data from a specific named node. You can also write JavaScript: {{ $json.price * 1.14 }}.'], points: ['$json — current item\'s data', '$node["Name"].json — data from a specific node', '$workflow — workflow metadata', '$now — current timestamp'] } },
+      { title: 'Loop / Split in Batches — handle large datasets', tag: 'concept', desc: 'Process hundreds or thousands of items without crashing.', content: { h: 'Loops and batches', p: ['By default, n8n processes all items in one go. For large datasets (100+ items), use the Split in Batches node to process them in groups of e.g. 10.', 'Connect the "loop" output back to a previous node to create a real loop. Use the "done" output to continue after all batches are finished.'], points: ['Split in Batches: processes N items at a time', 'Loop output: goes back to continue processing', 'Done output: triggers when all batches finished', 'Prevents API rate limit errors and memory issues'] } },
+      { title: 'Merge node — combine data from multiple paths', tag: 'hands', desc: 'Join two streams of data back into one.', content: { h: 'Merge node', p: ['When your workflow splits into two branches (e.g. after an IF node), you often need to join them back together. The Merge node does this.', 'Modes: Append (stack items from both), Merge by Index (pair item 1 with item 1), Merge by Key (join on a shared field like email or ID).'], points: ['Append: combine all items from both inputs', 'Merge by Key: SQL-style JOIN on a shared field', 'Use after parallel branches that need to reunite', 'Essential for enrichment workflows'] } },
+      { title: 'Code node — run custom JavaScript', tag: 'hands', desc: 'Full JavaScript when no node covers your need.', content: { h: 'Code node', p: ['The Code node lets you write JavaScript directly. You receive items as the variable items and must return an array of items.', 'Use it for: complex data transformations, custom calculations, string parsing, anything that no built-in node handles cleanly.'], points: ['Input: items array (same as every node)', 'Output: return an array of objects', 'Full JS available: loops, regex, Date, Math, JSON', 'Avoid external npm packages unless self-hosted'] } },
+    ]
+  },
+  {
+    num: '04', title: 'Triggers & integrations', subtitle: 'Starting workflows from real events', color: '#FAEEDA', textColor: '#854F0B', badge: 'Integrations', badgeBg: '#FAEEDA', badgeColor: '#854F0B',
+    lessons: [
+      { title: 'Webhook trigger — receive data from anywhere', tag: 'hands', desc: 'The most powerful trigger. Any service can call it.', content: { h: 'Webhook trigger', p: ['A webhook gives you a URL. When something calls that URL (a form, an app, another service), your workflow runs. It\'s real-time and works with anything that can send an HTTP request.', 'Activate your workflow, copy the webhook URL, and paste it into your form tool, payment gateway, or any service that supports webhooks.'], points: ['GET or POST requests supported', 'Data arrives in $json automatically', 'Set up in Typeform, Stripe, GitHub, etc.', 'Use "Respond to Webhook" node to send a response back'] } },
+      { title: 'Schedule trigger — time-based automation', tag: 'hands', desc: 'Run workflows every minute, hour, day, or on a cron schedule.', content: { h: 'Schedule trigger', p: ['Use the Schedule Trigger for anything that should run on a timer: daily reports, hourly syncs, weekly digests, midnight cleanups.', 'You can set it to a simple interval (every 15 minutes) or use a cron expression for complex patterns (every Monday at 9am).'], points: ['Simple interval: every N minutes/hours/days', 'Cron: full cron expression support', 'Timezone-aware', 'Can trigger multiple times per workflow'] } },
+      { title: 'Email trigger (Gmail / IMAP)', tag: 'hands', desc: 'Run a workflow when a new email arrives.', content: { h: 'Email trigger', p: ['Connect your Gmail or any IMAP email account and trigger a workflow on new emails. Filter by sender, subject, or label.', 'Use case: when a client emails you with "invoice" in the subject, automatically extract the data, save it to a spreadsheet, and reply with a confirmation.'], points: ['Gmail node: works with OAuth', 'IMAP: works with any email provider', 'Filter by subject, sender, label', 'Access email body, subject, attachments'] } },
+      { title: 'Popular integrations — Google Sheets, Notion, Slack, Airtable', tag: 'hands', desc: 'The four integrations you\'ll use in almost every project.', content: { h: 'Must-know integrations', p: ['Google Sheets: read rows, append rows, update cells. Notion: create pages, update databases, query content. Slack: send messages, post to channels, create DMs. Airtable: read/write records, search, filter.', 'All four use OAuth — connect once in n8n Credentials and reuse across all workflows.'], points: ['Google Sheets: best for simple tabular data', 'Airtable: best for structured relational data', 'Notion: best for knowledge/content management', 'Slack: best for team notifications and alerts'] } },
+      { title: 'Using API keys — Credentials in n8n', tag: 'concept', desc: 'The right way to store and reuse API secrets.', content: { h: 'n8n Credentials', p: ['Never paste API keys directly into node fields. Use n8n Credentials instead. Go to Settings → Credentials → Add Credential, select the service, paste your key once, and it\'s securely stored.', 'All nodes that need authentication have a Credential field. Click it, select your saved credential, and you\'re connected.'], points: ['Credentials are encrypted at rest', 'Reuse the same credential across many workflows', 'Supports: API key, OAuth2, Basic auth, custom headers', 'Share credentials across your team (Cloud)'] } },
+    ]
+  },
+  {
+    num: '05', title: 'Real-world projects', subtitle: 'Build complete automations end to end', color: '#FAECE7', textColor: '#993C1D', badge: 'Projects', badgeBg: '#FAECE7', badgeColor: '#993C1D',
+    lessons: [
+      { title: 'Project 1 — Lead capture form → CRM + Slack alert', tag: 'project', desc: 'A complete lead management workflow from scratch.', content: { h: 'Project 1: Lead capture', p: ['Goal: when someone fills a Typeform, save their data to Airtable (your CRM) and send a Slack message to your sales channel.', 'Nodes: Webhook Trigger (Typeform) → Set node (clean up data) → Airtable node (create record) → Slack node (send message).'], points: ['Typeform sends data to your webhook URL', 'Set node formats the name, email, etc.', 'Airtable node creates a new record', 'Slack node posts "New lead: [Name]" to #sales'] } },
+      { title: 'Project 2 — Daily report from Google Sheets to email', tag: 'project', desc: 'Automated morning digest sent to your inbox.', content: { h: 'Project 2: Daily report', p: ['Goal: every morning at 8am, read yesterday\'s data from Google Sheets, summarize it, and send an email digest.', 'Nodes: Schedule Trigger (8am daily) → Google Sheets node (get rows) → Code node (summarize/format) → Gmail node (send email).'], points: ['Schedule Trigger: cron 0 8 * * *', 'Google Sheets: filter rows by yesterday\'s date', 'Code node: format data into a readable summary', 'Gmail: send the formatted email'] } },
+      { title: 'Project 3 — AI-powered customer support with OpenAI', tag: 'project', desc: 'Connect n8n to OpenAI to build a smart auto-responder.', content: { h: 'Project 3: AI support', p: ['Goal: when a support email arrives, use OpenAI to classify it (billing / technical / general), generate a draft reply, and save it to Notion.', 'Nodes: Gmail Trigger → HTTP Request (OpenAI API) → IF node (route by category) → Notion node (save draft).'], points: ['Gmail Trigger: on new email in "Support" label', 'HTTP Request: POST to OpenAI chat completions API', 'IF node: branch by classification result', 'Notion: save draft reply for human review'] } },
+      { title: 'Project 4 — Social media post scheduler', tag: 'project', desc: 'Read a content calendar and auto-post on schedule.', content: { h: 'Project 4: Post scheduler', p: ['Goal: read a Google Sheet with scheduled posts (date, text, platform), check if today has a post due, and publish it to Twitter/X and LinkedIn.', 'Nodes: Schedule Trigger (every hour) → Google Sheets → IF node (is today?) → HTTP Request (post to Twitter API) + HTTP Request (post to LinkedIn API).'], points: ['Filter rows where date = today', 'Use Merge node to combine both API responses', 'Update Google Sheets to mark post as "published"', 'Handle errors with the Error Trigger node'] } },
+      { title: 'Project 5 — Invoice PDF generator', tag: 'project', desc: 'Auto-generate PDFs and send them by email.', content: { h: 'Project 5: Invoice generator', p: ['Goal: when a new order appears in Airtable, generate an invoice PDF using a template service (e.g. PDFMonkey or Carbone), attach it to an email, and send to the customer.', 'Nodes: Airtable Trigger (new record) → HTTP Request (generate PDF) → Gmail node (send with attachment).'], points: ['Airtable Trigger: fires on new "Order" record', 'HTTP Request: call PDF generation API with order data', 'Response includes PDF URL or base64', 'Gmail: attach and send to customer email'] } },
+    ]
+  },
+  {
+    num: '06', title: 'Advanced & production', subtitle: 'Error handling, performance, and deployment', color: '#E1F5EE', textColor: '#085041', badge: 'Advanced', badgeBg: '#E1F5EE', badgeColor: '#085041',
+    lessons: [
+      { title: 'Error handling — catch and recover from failures', tag: 'tip', desc: 'Build workflows that don\'t silently fail.', content: { h: 'Error handling', p: ['Add an Error Trigger workflow: a separate workflow that runs whenever any other workflow fails. Connect it to a Slack node to get instant alerts.', 'Use the Try/Catch pattern: wrap risky nodes in a sub-workflow and use the error output to handle failures gracefully.'], points: ['Error Trigger: global catch for all failures', 'Node error output: local catch per node', 'Retry on fail: automatic retry (up to 5 times)', 'Send yourself a Slack/email on failure'] } },
+      { title: 'Sub-workflows — reuse logic across projects', tag: 'tip', desc: 'Build modular, maintainable automations.', content: { h: 'Sub-workflows', p: ['A sub-workflow is a workflow called by another workflow. Use the Execute Workflow node to call it. Pass data in and get results back.', 'Example: build a "Send notification" sub-workflow once, then call it from 10 different workflows instead of duplicating the Slack/email nodes everywhere.'], points: ['Execute Workflow node: call any other workflow', 'Pass input data and receive output', 'Great for shared logic (notifications, logging, formatting)', 'Changes to the sub-workflow affect all callers'] } },
+      { title: 'Pinning & testing — develop without breaking production', tag: 'tip', desc: 'How to safely test changes to live workflows.', content: { h: 'Testing safely', p: ['Pin data: click any node and pin its output. The next time you run the workflow in editor mode, n8n uses the pinned data instead of hitting live APIs. Great for development.', 'Always duplicate a workflow before making big changes. Use the test URL for webhooks during development and switch to production URL when done.'], points: ['Pin: freeze a node\'s output for safe testing', 'Test webhook URL: separate from production URL', 'Execution history: replay any past run', 'Manual trigger: run a workflow step by step'] } },
+      { title: 'Deploy to a VPS with Docker Compose', tag: 'hands', desc: 'Run n8n in production on a $5/month server.', content: { h: 'Production deployment', p: ['Use a VPS (Hetzner, DigitalOcean, or Vultr) with Docker Compose. You\'ll need a docker-compose.yml that includes n8n + a PostgreSQL database + an Nginx reverse proxy with SSL.', 'Total cost: ~$5-6/month. Unlimited workflows, unlimited executions, full control.'], points: ['VPS: 2GB RAM minimum recommended', 'PostgreSQL: more reliable than SQLite for production', 'Nginx + Certbot: free SSL via Let\'s Encrypt', 'Set up daily database backups'] } },
+      { title: 'Environment variables & secrets management', tag: 'tip', desc: 'Keep your credentials out of workflow exports.', content: { h: 'Secrets management', p: ['Store sensitive values as environment variables in your Docker config, not hardcoded in workflows. Reference them in n8n using the $env object.', 'Example: set N8N_OPENAI_KEY=sk-... in your .env file. In a Code node: const apiKey = $env.N8N_OPENAI_KEY.'], points: ['Set env vars in docker-compose.yml or .env', 'Reference with $env.VARIABLE_NAME', 'Never export workflows with hardcoded secrets', 'Use n8n Credentials for OAuth — never env vars for those'] } },
+      { title: 'Performance tips — keep workflows fast', tag: 'tip', desc: 'Optimize for speed and reliability at scale.', content: { h: 'Performance tips', p: ['Avoid doing unnecessary API calls inside loops. Batch reads: fetch all data at once, then process with a Code node. Limit Google Sheets reads — they\'re slow. Use Airtable or a database for high-frequency reads.'], points: ['Read all data first, then process — never read inside loops', 'Use Split in Batches to avoid memory issues', 'Cache slow API responses using a database', 'Set execution timeout to avoid zombie runs'] } },
+      { title: 'Where to go next — resources & community', tag: 'tip', desc: 'The best places to learn, ask, and find templates.', content: { h: 'Next steps', p: ['You now know enough to build real production automations. The best way to get faster is to build something real and break it.'], points: ['n8n.io/workflows — official template library (500+ free templates)', 'community.n8n.io — active forum, post your questions', 'n8n YouTube channel — video walkthroughs', 'Reddit r/n8n — community projects and tips'] } },
+    ]
+  },
+];
+
+let openModule = null;
+let openLesson = null;
+
+function updateProgress() {
+  const pct = Math.round((done.size / TOTAL) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = done.size + ' of ' + TOTAL + ' lessons completed';
+  document.getElementById('done-count').textContent = done.size;
+}
+
+function getTag(tag) {
+  if (tag === 'concept') return '<span class="lesson-tag tag-concept">Concept</span>';
+  if (tag === 'hands') return '<span class="lesson-tag tag-hands">Hands-on</span>';
+  if (tag === 'project') return '<span class="lesson-tag tag-project">Project</span>';
+  if (tag === 'tip') return '<span class="lesson-tag tag-tip">Pro tip</span>';
+  return '';
+}
+
+function render() {
+  const container = document.getElementById('modules');
+  container.innerHTML = '';
+
+  modules.forEach((mod, mi) => {
+    const card = document.createElement('div');
+    card.className = 'module-card';
+
+    const completed = mod.lessons.filter((_, li) => done.has(mi + '-' + li)).length;
+
+    card.innerHTML = `
+      <div class="module-header" data-mi="${mi}">
+        <div class="module-num" style="background:${mod.color};color:${mod.textColor}">${mod.num}</div>
+        <div class="module-meta">
+          <div class="module-title">${mod.title}</div>
+          <div class="module-subtitle">${mod.subtitle} · ${completed}/${mod.lessons.length} done</div>
+        </div>
+        <span class="module-badge" style="background:${mod.badgeBg};color:${mod.badgeColor}">${mod.badge}</span>
+        <span class="module-chevron ${openModule === mi ? 'open' : ''}">&#9654;</span>
+      </div>
+      <div class="module-body ${openModule === mi ? 'open' : ''}">
+        <div class="lesson-list">
+          ${mod.lessons.map((ls, li) => {
+            const key = mi + '-' + li;
+            const isDone = done.has(key);
+            const isOpen = openLesson === key;
+            return `
+              <div class="lesson-row" data-mi="${mi}" data-li="${li}">
+                <div class="lesson-check ${isDone ? 'done' : ''}" data-check="${key}">
+                  ${isDone ? '&#10003;' : ''}
+                </div>
+                <div class="lesson-info">
+                  <div class="lesson-title">${ls.title}</div>
+                  <div class="lesson-desc">${ls.desc}</div>
+                  ${getTag(ls.tag)}
+                </div>
+              </div>
+              <div class="content-panel ${isOpen ? 'open' : ''}" id="panel-${key}">
+                <h3>${ls.content.h}</h3>
+                ${ls.content.p.map(p => `<p>${p}</p>`).join('')}
+                <ul>${ls.content.points.map(pt => `<li>${pt}</li>`).join('')}</ul>
+                <button class="ask-btn" onclick="sendPrompt('Tell me more about: ${ls.title.replace(/'/g, '')} in n8n')">Ask Claude about this &#8599;</button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  document.querySelectorAll('.module-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const mi = parseInt(h.dataset.mi);
+      openModule = openModule === mi ? null : mi;
+      openLesson = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll('.lesson-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('[data-check]')) {
+        const key = e.target.closest('[data-check]').dataset.check;
+        if (done.has(key)) done.delete(key); else done.add(key);
+        updateProgress();
+        render();
+        return;
+      }
+      const mi = row.dataset.mi;
+      const li = row.dataset.li;
+      const key = mi + '-' + li;
+      openLesson = openLesson === key ? null : key;
+      render();
+    });
+  });
+}
+
+render();
+updateProgress();
+</script>
