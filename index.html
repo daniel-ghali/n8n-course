@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
@@ -16,54 +16,317 @@
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛪</text></svg>">
 <style>
+:root {
+  --color-primary: #ff6d5a; 
+  --color-primary-glow: rgba(255, 109, 90, 0.3);
+  --color-secondary: #ff8c7a;
+  --color-accent: #00e5ff; 
+  --color-bg-deep: #0c0c14;
+  --color-bg-card: #161621;
+  --color-bg-hover: #1e1e2d;
+  --color-text-main: #f0f0f5;
+  --color-text-muted: #a0a0b0;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-bright: rgba(255, 109, 90, 0.2);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.course-wrap { padding: 1.5rem 0; }
-.course-header { margin-bottom: 2rem; }
-.course-header h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
-.course-header p { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; }
-.progress-bar-wrap { margin: 1rem 0 0; }
-.progress-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
-.progress-track { height: 6px; background: var(--color-background-secondary); border-radius: 99px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 99px; background: #1D9E75; transition: width 0.4s ease; }
-.module-grid { display: flex; flex-direction: column; gap: 10px; }
-.module-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
-.module-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; }
-.module-header:hover { background: var(--color-background-secondary); }
-.module-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
-.module-meta { flex: 1; }
-.module-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
-.module-subtitle { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
-.module-badge { font-size: 12px; padding: 3px 10px; border-radius: 99px; flex-shrink: 0; }
-.module-chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform 0.2s; flex-shrink: 0; }
-.module-chevron.open { transform: rotate(90deg); }
-.module-body { display: none; border-top: 0.5px solid var(--color-border-tertiary); }
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+
+}
+
+.course-wrap { 
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem; 
+}
+
+.course-wrap  h2 { 
+  max-width: 900px;
+  text-align: center;
+  font-size: 20px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem; 
+}
+
+.course-header { 
+  margin-bottom: 3rem; 
+  text-align: center;
+}
+
+.course-header h1 { 
+  font-size: 2.5rem; 
+  font-weight: 800; 
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #fff 0%, #ff6d5a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem; 
+}
+
+.course-header p { 
+  font-size: 1.1rem; 
+  color: var(--color-text-muted); 
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.progress-bar-wrap { 
+  margin: 2rem auto 0;
+  max-width: 500px;
+}
+
+.progress-label { 
+  font-size: 0.85rem; 
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary); 
+  margin-bottom: 0.75rem; 
+  display: block;
+}
+
+.progress-track { 
+  height: 8px; 
+  background: rgba(255, 255, 255, 0.05); 
+  border-radius: 99px; 
+  overflow: hidden; 
+  position: relative;
+}
+
+.progress-fill { 
+  height: 100%; 
+  border-radius: 99px; 
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); 
+  box-shadow: 0 0 15px var(--color-primary-glow);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
+}
+
+.stats-row { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1.5rem; 
+  margin-bottom: 3rem; 
+}
+
+.stat-card { 
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  border-radius: 16px; 
+  padding: 1.5rem; 
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-border-bright);
+}
+
+.stat-num { 
+  font-size: 2rem; 
+  font-weight: 800; 
+  color: #fff; 
+  display: block;
+}
+
+.stat-lbl { 
+  font-size: 0.75rem; 
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted); 
+  margin-top: 0.25rem; 
+}
+
+.module-grid { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 1rem; 
+}
+
+.module-card { 
+  background: var(--color-bg-card); 
+  border: 1px solid var(--color-border); 
+  border-radius: 20px; 
+  overflow: hidden; 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.module-card:hover {
+  border-color: var(--color-border-bright);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.module-header { 
+  display: flex; 
+  align-items: center; 
+  gap: 1.25rem; 
+  padding: 1.5rem; 
+  cursor: pointer; 
+  user-select: none; 
+}
+
+.module-header:hover { background: var(--color-bg-hover); }
+
+.module-num { 
+  width: 44px; 
+  height: 44px; 
+  border-radius: 12px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 1rem; 
+  font-weight: 700; 
+  flex-shrink: 0; 
+  background: var(--color-primary); 
+  color: #fff; 
+  box-shadow: 0 4px 12px var(--color-primary-glow);
+}
+
+.module-meta { flex: 1; text-align: start; }
+.module-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+.module-subtitle { font-size: 0.9rem; color: var(--color-text-muted); margin-top: 2px; }
+
+.module-badge { 
+  font-size: 0.7rem; 
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 12px; 
+  border-radius: 99px; 
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.module-chevron { 
+  font-size: 0.8rem; 
+  color: var(--color-text-muted); 
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+.module-chevron.open { transform: rotate(90deg); color: var(--color-primary); }
+
+.module-body { 
+  display: none; 
+  border-top: 1px solid var(--color-border); 
+  background: rgba(0, 0, 0, 0.1);
+}
 .module-body.open { display: block; }
-.lesson-list { padding: 8px 0; }
-.lesson-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px 10px 60px; cursor: pointer; }
-.lesson-row:hover { background: var(--color-background-secondary); }
-.lesson-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--color-border-secondary); flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.2s; }
-.lesson-check.done { background: #1D9E75; border-color: #1D9E75; color: #fff; }
-.lesson-info { flex: 1; }
-.lesson-title { font-size: 14px; color: var(--color-text-primary); line-height: 1.5; }
-.lesson-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.5; }
-.lesson-tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-top: 5px; display: inline-block; }
-.tag-concept { background: #E6F1FB; color: #0C447C; }
-.tag-hands { background: #EAF3DE; color: #3B6D11; }
-.tag-project { background: #FAEEDA; color: #854F0B; }
-.tag-tip { background: #EEEDFE; color: #3C3489; }
-.content-panel { background: var(--color-background-secondary); border-top: 0.5px solid var(--color-border-tertiary); padding: 16px; display: none; }
-.content-panel.open { display: block; }
-.content-panel h3 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
-.content-panel p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 10px; }
-.content-panel ul { padding-left: 1.2rem; }
-.content-panel ul li { font-size: 14px; color: var(--color-text-secondary); line-height: 1.8; }
-.ask-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 7px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
-.ask-btn:hover { background: var(--color-background-secondary); }
-.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
-.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; text-align: center; }
-.stat-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
-.stat-lbl { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+
+.lesson-list { padding: 1rem 0; }
+
+.lesson-row { 
+  display: flex; 
+  align-items: flex-start; 
+  gap: 1.25rem; 
+  padding: 1rem 1.5rem;
+  padding-inline-start: 4.5rem;
+  cursor: pointer; 
+  transition: background 0.2s ease;
+}
+
+.lesson-row:hover { background: var(--color-bg-hover); }
+
+.lesson-check { 
+  width: 22px; 
+  height: 22px; 
+  border-radius: 6px; 
+  border: 2px solid var(--color-border); 
+  flex-shrink: 0; 
+  margin-top: 2px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 0.7rem; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.lesson-check.done { 
+  background: var(--color-primary); 
+  border-color: var(--color-primary); 
+  color: #fff; 
+  box-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+.lesson-info { flex: 1; text-align: start; }
+.lesson-title { font-size: 1rem; font-weight: 600; color: #fff; }
+.lesson-desc { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px; line-height: 1.5; }
+
+.lesson-tag { 
+  font-size: 0.65rem; 
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px; 
+  border-radius: 4px; 
+  margin-top: 0.75rem; 
+  display: inline-block; 
+}
+
+.tag-concept { background: rgba(0, 229, 255, 0.1); color: var(--color-accent); }
+.tag-hands { background: rgba(255, 109, 90, 0.1); color: var(--color-primary); }
+.tag-project { background: rgba(255, 255, 255, 0.05); color: #fff; }
+.tag-tip { background: rgba(255, 255, 255, 0.05); color: var(--color-text-muted); }
+
+.content-panel { 
+  background: var(--color-bg-hover); 
+  border-top: 1px solid var(--color-border); 
+  padding: 2rem; 
+  display: none; 
+}
+
+.content-panel.open { display: block; animation: slideDown 0.4s ease; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-panel h3 { font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 1rem; text-align: start; }
+.content-panel p { font-size: 1rem; color: var(--color-text-muted); margin-bottom: 1rem; text-align: start; }
+.content-panel ul { padding-inline-start: 1.5rem; margin-bottom: 1.5rem; text-align: start; }
+.content-panel ul li { font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+
+.ask-btn { 
+  margin-top: 1.5rem; 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 0.5rem; 
+  font-size: 0.9rem; 
+  font-weight: 600;
+  padding: 0.75rem 1.5rem; 
+  border-radius: 12px; 
+  border: none; 
+  background: #fff; 
+  color: var(--color-bg-deep); 
+  cursor: pointer; 
+  transition: all 0.3s ease;
+}
+
+.ask-btn:hover { 
+  background: var(--color-primary); 
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--color-primary-glow);
+}
+
+@media (max-width: 768px) {
+  .course-header h1 { font-size: 1.8rem; }
+  .stats-row { grid-template-columns: 1fr; gap: 1rem; }
+  .module-header { padding: 1.25rem; }
+  .lesson-row { padding-right: 1.5rem; }
+  .module-num { width: 36px; height: 36px; font-size: 0.9rem; }
+  .content-panel { padding: 1.5rem; }
+}
 </style>
 </head>
 
@@ -71,20 +334,20 @@ body { font-family: var(--font-sans); }
 
 
 <div class="course-wrap">
-<h2 class="sr-only">n8n full course — interactive learning tracker</h2>
+<h2 class="sr-only">n8n full course — By Daniel Ghlay </h2>
 
 <div class="course-header">
   <h1>n8n — from zero to automation</h1>
   <p>A structured course to understand, build, and deploy real automations with n8n. Click any lesson to read it, then mark it done.</p>
   <div class="progress-bar-wrap">
-    <div class="progress-label" id="prog-label">0 of 28 lessons completed</div>
+    <div class="progress-label" id="prog-label">0 of 40 lessons completed</div>
     <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
 </div>
 
 <div class="stats-row">
-  <div class="stat-card"><div class="stat-num">6</div><div class="stat-lbl">Modules</div></div>
-  <div class="stat-card"><div class="stat-num">28</div><div class="stat-lbl">Lessons</div></div>
+  <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">Modules</div></div>
+  <div class="stat-card"><div class="stat-num">40</div><div class="stat-lbl">Lessons</div></div>
   <div class="stat-card"><div class="stat-num" id="done-count">0</div><div class="stat-lbl">Completed</div></div>
 </div>
 
@@ -92,7 +355,7 @@ body { font-family: var(--font-sans); }
 </div>
 
 <script>
-const TOTAL = 28;
+const TOTAL = 40;
 const done = new Set();
 
 const modules = [
@@ -158,6 +421,24 @@ const modules = [
       { title: 'Where to go next — resources & community', tag: 'tip', desc: 'The best places to learn, ask, and find templates.', content: { h: 'Next steps', p: ['You now know enough to build real production automations. The best way to get faster is to build something real and break it.'], points: ['n8n.io/workflows — official template library (500+ free templates)', 'community.n8n.io — active forum, post your questions', 'n8n YouTube channel — video walkthroughs', 'Reddit r/n8n — community projects and tips'] } },
     ]
   },
+  {
+    num: '07', title: 'AI & Future Integrations', subtitle: 'Leveraging AI and emerging tech in n8n', badge: 'Future',
+    lessons: [
+      { title: 'Integrating LLMs (e.g., OpenAI, Gemini)', tag: 'hands', desc: 'Connect n8n to large language models for advanced text automation.', content: { h: 'LLM Integrations', p: ['Learn to use n8n\'s HTTP Request node or dedicated AI nodes to interact with OpenAI, Gemini, or other LLMs. Automate content generation, summarization, sentiment analysis, and more.', 'Example: Receive an email, send its content to an LLM for summarization, then post the summary to Slack.'], points: ['HTTP Request node for direct API calls', 'Dedicated AI nodes for simpler integration', 'Use cases: content creation, data extraction, classification', 'Manage API keys securely with n8n Credentials'] } },
+      { title: 'Vision AI with n8n', tag: 'hands', desc: 'Automate tasks involving image recognition and analysis.', content: { h: 'Vision AI Automation', p: ['Explore how to integrate n8n with Vision AI services (e.g., Google Cloud Vision, AWS Rekognition). Use cases include OCR for document processing, object detection in images, and facial recognition.', 'Example: Upload an invoice image, use Vision AI to extract text, then process the data in n8n.'], points: ['Connect to cloud Vision AI APIs', 'Process images for text, labels, and faces', 'Automate document parsing and data entry', 'Enhance workflows with visual data insights'] } },
+      { title: 'Real-time Data Streaming', tag: 'concept', desc: 'Process data streams in real-time with n8n.', content: { h: 'Real-time Streaming', p: ['Understand how n8n can connect to real-time data sources like Kafka, RabbitMQ, or WebSockets. Build workflows that react instantly to incoming data, enabling immediate actions and analytics.', 'Example: Monitor a live data stream for specific events, then trigger alerts or updates in other systems.'], points: ['Webhook triggers for push-based data', 'Polling for pull-based data streams', 'Process data as it arrives, reducing latency', 'Ideal for monitoring, IoT, and financial applications'] } },
+      { title: 'Web3 & Blockchain Automation', tag: 'concept', desc: 'Automate interactions with decentralized applications and blockchain networks.', content: { h: 'Web3 Automation', p: ['Dive into the basics of connecting n8n with Web3 services and blockchain APIs. Automate tasks like monitoring crypto wallets, interacting with smart contracts, or tracking NFT transactions.', 'Example: Get an alert when a specific cryptocurrency price changes, or when a new transaction occurs on a monitored wallet.'], points: ['HTTP Request node for blockchain APIs (e.g., Etherscan)', 'Monitor wallet activity and smart contract events', 'Automate data collection from decentralized sources', 'Future-proof your automations with Web3 capabilities'] } },
+    ]
+  },
+  {
+    num: '08', title: 'School Secretary Automation', subtitle: 'Streamlining administrative tasks in education', badge: 'Industry',
+    lessons: [
+      { title: 'Automated Attendance Tracking', tag: 'project', desc: 'Automatically log student attendance and notify parents of absences.', content: { h: 'Attendance & Notifications', p: ['n8n can connect your school\'s attendance system to communication tools like WhatsApp or Email. When a student is marked absent, a workflow can instantly send a personalized message to parents.'], points: ['Trigger: Attendance sheet updated', 'Logic: Filter for "Absent" status', 'Action: Send WhatsApp/Email via Twilio or Gmail', 'Result: Immediate parent communication'] } },
+      { title: 'Report Card & Transcript Generator', tag: 'hands', desc: 'Generate PDF report cards from spreadsheet data and email them to students.', content: { h: 'PDF Generation at Scale', p: ['Use the HTML to PDF node to create professional report cards. n8n pulls student grades from a source, populates a template, and handles the distribution.'], points: ['Source: Google Sheets or Airtable', 'Tool: HTML to PDF node', 'Distribution: Automated email with attachment', 'Benefit: Saves days of manual document creation'] } },
+      { title: 'Parent-Teacher Meeting Scheduler', tag: 'concept', desc: 'Sync calendar bookings with teacher availability and send reminders.', content: { h: 'Intelligent Scheduling', p: ['Connect booking tools like Calendly or custom forms to school calendars. n8n ensures no double-bookings and sends automated reminders.'], points: ['Input: New booking via Webhook', 'Logic: Check teacher\'s Google/Outlook calendar', 'Action: Create event + Send confirmation', 'Reminder: Send notification 24 hours before'] } },
+      { title: 'Inventory & Supply Requests', tag: 'hands', desc: 'Manage school supplies requests and approval workflows.', content: { h: 'Supply Chain Automation', p: ['Teachers submit requests via a form. n8n routes the request to the principal for approval. Once approved, it updates inventory and notifies the secretary.'], points: ['Trigger: Google Form submission', 'Workflow: Wait for Approval (n8n Wait node)', 'Action: Update inventory spreadsheet', 'Notification: Slack/Email to secretary for procurement'] } },
+    ]
+  },
 ];
 
 let openModule = null;
@@ -190,12 +471,12 @@ function render() {
 
     card.innerHTML = `
       <div class="module-header" data-mi="${mi}">
-        <div class="module-num" style="background:${mod.color};color:${mod.textColor}">${mod.num}</div>
+        <div class="module-num">${mod.num}</div>
         <div class="module-meta">
           <div class="module-title">${mod.title}</div>
           <div class="module-subtitle">${mod.subtitle} · ${completed}/${mod.lessons.length} done</div>
         </div>
-        <span class="module-badge" style="background:${mod.badgeBg};color:${mod.badgeColor}">${mod.badge}</span>
+        <span class="module-badge">${mod.badge}</span>
         <span class="module-chevron ${openModule === mi ? 'open' : ''}">&#9654;</span>
       </div>
       <div class="module-body ${openModule === mi ? 'open' : ''}">
@@ -219,7 +500,7 @@ function render() {
                 <h3>${ls.content.h}</h3>
                 ${ls.content.p.map(p => `<p>${p}</p>`).join('')}
                 <ul>${ls.content.points.map(pt => `<li>${pt}</li>`).join('')}</ul>
-                <button class="ask-btn" onclick="sendPrompt('Tell me more about: ${ls.title.replace(/'/g, '')} in n8n')">Ask Claude about this &#8599;</button>
+                <button class="ask-btn" onclick="sendPrompt('Tell me more about: ${ls.title.replace(/'/g, '')} in n8n')">Ask Daniel about this &#8599;</button>
               </div>
             `;
           }).join('')}
